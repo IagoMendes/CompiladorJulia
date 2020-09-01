@@ -37,6 +37,13 @@ class Tokenizer:
                 self.position += 1
                 break
 
+            elif (self.origin[pos] == ' ' and isNumber):
+                self.position += 1
+                break
+            
+            elif (self.origin[pos] == ' '):
+                self.position += 1
+
             else:
                 break
 
