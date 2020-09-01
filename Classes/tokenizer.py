@@ -15,7 +15,7 @@ class Tokenizer:
             if (self.position == len(self.origin) and self.actual.type != 'EOF'): # Garantindo o final da string como EOF sem entrar em loop
                 resToken = Token('', 'EOF')
                 self.actual = resToken
-                return resToken
+                return
 
         while(True): 
             if (self.position >= len(self.origin)):
@@ -51,4 +51,4 @@ class Tokenizer:
             resToken = Token(numberToken, 'INT')
         
         self.actual = resToken
-        return resToken
+        return
