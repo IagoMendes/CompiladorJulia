@@ -11,14 +11,9 @@ class Tokenizer:
         resToken = None
         isNumber = False
 
-        if (self.actual != None):
-            if (self.position == len(self.origin) and self.actual.type != 'EOF'): # Garantindo o final da string como EOF sem entrar em loop
+        while(True):
+            if (self.position == len(self.origin)):
                 resToken = Token('', 'EOF')
-                self.actual = resToken
-                return
-
-        while(True): 
-            if (self.position >= len(self.origin)):
                 break
 
             pos = self.position
@@ -37,11 +32,11 @@ class Tokenizer:
                 self.position += 1
                 break
 
-            elif (self.origin[pos] == ' ' and isNumber):
+            elif (self.origin[pos].isspace() and isNumber):
                 self.position += 1
                 break
             
-            elif (self.origin[pos] == ' '):
+            elif (self.origin[pos].isspace()):
                 self.position += 1
 
             else:

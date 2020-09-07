@@ -6,7 +6,12 @@ class Parser:
     @staticmethod
     def run(code):
         Parser.tokens = Tokenizer(code)
-        return Parser.parseExpression()
+        result = Parser.parseExpression()
+
+        if Parser.tokens.actual.type == "EOF":
+            return result
+        else:
+            raise NameError(f"Last token isn't EOF")
 
     @staticmethod
     def parseExpression():
@@ -17,33 +22,28 @@ class Parser:
             result = int(Parser.tokens.actual.value)
 
             Parser.tokens.selectNext()
-            if (Parser.tokens.actual.type != "INT"): 
+            while (Parser.tokens.actual.type == 'PLUS' or Parser.tokens.actual.type == 'MINUS'):
 
-                while (Parser.tokens.actual.type == 'PLUS' or Parser.tokens.actual.type == 'MINUS'):
-
-                    if (Parser.tokens.actual.type == 'PLUS'):
-                        Parser.tokens.selectNext()
-                        if (Parser.tokens.actual.type == 'INT'):
-                            result += int(Parser.tokens.actual.value)
-                        else:
-                            raise NameError(f"INT expected, instead got type {Parser.tokens.actual.type}")
-
-                    if (Parser.tokens.actual.type == 'MINUS'):
-                        Parser.tokens.selectNext()
-                        if (Parser.tokens.actual.type == 'INT'):
-                            result -= int(Parser.tokens.actual.value)
-                        else:
-                            raise NameError(f"INT expected, instead got type {Parser.tokens.actual.type}")
-
+                if (Parser.tokens.actual.type == 'PLUS'):
                     Parser.tokens.selectNext()
-                    if (Parser.tokens.actual != None):        
-                        if (Parser.tokens.actual.type == "INT"):
-                            raise NameError(f"Operation expected, instead got type {Parser.tokens.actual.type}")
+                    if (Parser.tokens.actual.type == 'INT'):
+                        result += int(Parser.tokens.actual.value)
                     else:
-                        break
+                        raise NameError(f"INT expected, instead got type {Parser.tokens.actual.type}")
 
-            else: 
-                raise NameError(f"Operation expected, instead got type {Parser.tokens.actual.type}")
+                if (Parser.tokens.actual.type == 'MINUS'):
+                    Parser.tokens.selectNext()
+                    if (Parser.tokens.actual.type == 'INT'):
+                        result -= int(Parser.tokens.actual.value)
+                    else:
+                        raise NameError(f"INT expected, instead got type {Parser.tokens.actual.type}")
+
+                Parser.tokens.selectNext()
+                if (Parser.tokens.actual != None):        
+                    if (Parser.tokens.actual.type == "INT"):
+                        raise NameError(f"Operation expected, instead got type {Parser.tokens.actual.type}")
+                else:
+                    break
 
             return result
         else:
