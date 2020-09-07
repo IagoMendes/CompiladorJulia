@@ -31,6 +31,16 @@ class Tokenizer:
                 resToken = Token(self.origin[pos], 'MINUS')
                 self.position += 1
                 break
+            
+            elif (self.origin[pos] == '*' and not isNumber):
+                resToken = Token(self.origin[pos], 'MULT')
+                self.position += 1
+                break
+
+            elif (self.origin[pos] == '/' and not isNumber):
+                resToken = Token(self.origin[pos], 'DIV')
+                self.position += 1
+                break
 
             elif (self.origin[pos].isspace() and isNumber):
                 self.position += 1
