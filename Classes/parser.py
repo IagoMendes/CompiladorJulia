@@ -30,7 +30,7 @@ class Parser:
             else:
                 raise NameError(f"INT expected, instead got type {Parser.tokens.actual.type}")
 
-        return result
+        return int(result)
 
     @staticmethod
     def parseTerm():
@@ -44,11 +44,11 @@ class Parser:
             elif (Parser.tokens.actual.type == 'DIV'):
                 Parser.tokens.selectNext()
                 result /= Parser.parseFactor()
-                
+
             else:
                 raise NameError(f"INT expected, instead got type {Parser.tokens.actual.type}")
 
-        return result
+        return int(result)
 
 
     @staticmethod
@@ -79,5 +79,5 @@ class Parser:
         else:
             raise NameError(f"Invalid Syntax")
 
-        return result
+        return int(result)
     
