@@ -28,7 +28,7 @@ class Parser:
                 result -= Parser.parseTerm()
 
             else:
-                raise NameError(f"INT expected, instead got type {Parser.tokens.actual.type}")
+                raise NameError(f"Got type {Parser.tokens.actual.type} when expecting PLUS or MINUS")
 
         return int(result)
 
@@ -46,7 +46,7 @@ class Parser:
                 result /= Parser.parseFactor()
 
             else:
-                raise NameError(f"INT expected, instead got type {Parser.tokens.actual.type}")
+                raise NameError(f"Got type {Parser.tokens.actual.type} when expecting MULT or DIV")
 
         return int(result)
 
