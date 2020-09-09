@@ -42,6 +42,16 @@ class Tokenizer:
                 self.position += 1
                 break
 
+            elif (self.origin[pos] == '(' and not isNumber):
+                resToken = Token(self.origin[pos], 'OPEN_P')
+                self.position += 1
+                break
+
+            elif (self.origin[pos] == ')' and not isNumber):
+                resToken = Token(self.origin[pos], 'CLOSE_P')
+                self.position += 1
+                break
+
             elif (self.origin[pos].isspace() and isNumber):
                 self.position += 1
                 break
