@@ -18,7 +18,7 @@ def main():
     result = Parser.run(newString)
 
     # Printing out the result
-    sys.stdout.write(str(result))
+    sys.stdout.write(str(result.Evaluate()))
     return
 
 if __name__ == "__main__":
