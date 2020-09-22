@@ -4,21 +4,26 @@ from Classes.pre import PreOps
 
 def main():
 
-    # Getting string from terminal 
-    string = ""
     if (len(sys.argv) > 1):
-        string = sys.argv[1]
+        if sys.argv[1].lower().endswith('.jl'):
+            juliaFile = open(sys.argv[1])
+
+            for operation in juliaFile:
+                # Pre processing string
+                newString = PreOps.filter(operation)
+
+                # Parsing string
+                result = Parser.run(newString)
+
+                # Printing out the result
+                sys.stdout.write(str(result.Evaluate()))
+                sys.stdout.write("\n")
+
+        else:
+            raise NameError(f"Expected Julia extension")
     else: 
         return
-
-    # Pre processing string
-    newString = PreOps.filter(string)
-
-    # Parsing string
-    result = Parser.run(newString)
-
-    # Printing out the result
-    sys.stdout.write(str(result.Evaluate()))
+ 
     return
 
 if __name__ == "__main__":
