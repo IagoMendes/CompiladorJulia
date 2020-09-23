@@ -5,22 +5,21 @@ from Classes.pre import PreOps
 def main():
 
     if (len(sys.argv) > 1):
-        if sys.argv[1].lower().endswith('.jl'):
-            juliaFile = open(sys.argv[1])
+        #if sys.argv[1].lower().endswith('.jl'):
+        juliaFile = open(sys.argv[1])
 
-            for operation in juliaFile:
-                # Pre processing string
-                newString = PreOps.filter(operation)
+        for operation in juliaFile:
+            # Pre processing string
+            newString = PreOps.filter(operation)
 
-                # Parsing string
-                result = Parser.run(newString)
+            # Parsing string
+            result = Parser.run(newString)
 
-                # Printing out the result
-                sys.stdout.write(str(result.Evaluate()))
-                sys.stdout.write("\n")
+            # Printing out the result
+            sys.stdout.write(str(result.Evaluate()))
 
-        else:
-            raise NameError(f"Expected Julia extension")
+        #else:
+        #    raise NameError(f"Expected Julia extension")
     else: 
         return
  
