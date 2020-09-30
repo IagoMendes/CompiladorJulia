@@ -2,7 +2,7 @@
 
 ## Basic number calculator (+ and -) v1.0.1
 
-Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/v1.0/Diagrams/diagrama1.pdf
+Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/master/Diagrams/diagrama1.pdf
 
 EBNF:
 
@@ -11,7 +11,7 @@ EBNF:
 
 ## Improved calculator (/ and *) v1.1.1
 
-Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/v1.0/Diagrams/diagrama2.pdf
+Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/master/Diagrams/diagrama2.pdf
 
 EBNF:
 
@@ -21,7 +21,7 @@ EBNF:
 
 ## Added parenthesis to the expression, along with negative numbers v1.2.1
 
-Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/v1.0/Diagrams/diagrama3.png
+Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/master/Diagrams/diagrama3.png
 
 EBNF:
 
@@ -32,7 +32,7 @@ EBNF:
 
 ## Implementing AST and support for files v2.0.1
 
-Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/v1.0/Diagrams/diagrama3.png
+Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/master/Diagrams/diagrama3.png
 
 EBNF:
 
@@ -43,7 +43,7 @@ EBNF:
 
 ## Variables, Command Block and Println v2.1.1
 
-Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/v1.0/Diagrams/diagrama4.png
+Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/master/Diagrams/diagrama4.png
 
 EBNF:
 
