@@ -1,5 +1,16 @@
 from Classes.token import Token
 
+tokens = {
+    "+": "PLUS",
+    "-": "MINUS",
+    "*": "MULT",
+    "/": "DIV",
+    "(": "OPEN_P",
+    ")": "CLOSE_P",
+    "\n": "LINE_END",
+    "=": "EQUAL"
+}
+
 class Tokenizer:
     def __init__(self, origin):
         self.origin = origin
@@ -7,63 +18,38 @@ class Tokenizer:
         self.actual = None
     
     def selectNext(self):
-        numberToken = ""
-        resToken = None
-        isNumber = False
-
-        while(True):
-            if (self.position == len(self.origin)):
-                resToken = Token('', 'EOF')
-                break
-
-            pos = self.position
-            if (self.origin[pos].isnumeric()) and (len(numberToken) == 0 or numberToken.isnumeric()):
-                isNumber = True
-                numberToken += self.origin[pos]
-                self.position += 1   
-
-            elif (self.origin[pos] == '+' and not isNumber):
-                resToken = Token(self.origin[pos], 'PLUS')
-                self.position += 1
-                break
-
-            elif (self.origin[pos] == '-' and not isNumber):
-                resToken = Token(self.origin[pos], 'MINUS')
-                self.position += 1
-                break
-            
-            elif (self.origin[pos] == '*' and not isNumber):
-                resToken = Token(self.origin[pos], 'MULT')
-                self.position += 1
-                break
-
-            elif (self.origin[pos] == '/' and not isNumber):
-                resToken = Token(self.origin[pos], 'DIV')
-                self.position += 1
-                break
-
-            elif (self.origin[pos] == '(' and not isNumber):
-                resToken = Token(self.origin[pos], 'OPEN_P')
-                self.position += 1
-                break
-
-            elif (self.origin[pos] == ')' and not isNumber):
-                resToken = Token(self.origin[pos], 'CLOSE_P')
-                self.position += 1
-                break
-
-            elif (self.origin[pos].isspace() and isNumber):
-                self.position += 1
-                break
-            
-            elif (self.origin[pos].isspace()):
-                self.position += 1
-
-            else:
-                break
-
-        if isNumber:
-            resToken = Token(numberToken, 'INT')
         
-        self.actual = resToken
+        if (self.position == len(self.origin)):
+            self.actual = Token('', 'EOF')
+            return
+        
+        elif (self.origin[self.position].isspace()):
+            self.position += 1
+            self.selectNext()
+
+        elif (self.origin[self.position] in tokens):
+            self.actual = Token(self.origin[self.position], tokens[self.origin[self.position]])
+            self.position += 1        
+
+        elif (self.origin[self.position].isnumeric()):
+            resToken = ""
+            while (self.position < len(self.origin) and (self.origin[self.position].isnumeric())):
+                resToken += self.origin[self.position]
+                self.position += 1
+            self.actual = Token(resToken, "INT")
+
+        elif (self.origin[self.position].isalpha()):
+            resToken = ""
+            while (self.position < len(self.origin) and \
+                  (self.origin[self.position].isnumeric() or \
+                   self.origin[self.position].isalpha() or \
+                   self.origin[self.position] == "_")):
+                resToken += self.origin[self.position]
+                self.position += 1
+
+            if resToken == "println":
+                self.actual = Token(resToken, "PRINT")
+            else:
+                self.actual = Token(resToken, "IDENTIFIER")
+
         return

@@ -1,5 +1,5 @@
 from Classes.tokenizer import Tokenizer
-from Classes.node import IntVal, UnOp, BinOp, NoOp, Node
+from Classes.node import IntVal, UnOp, BinOp, NoOp, Node, Assignment, Identifier, Statement, Print
 
 class Parser:
     tokens = None
@@ -9,12 +9,51 @@ class Parser:
         Parser.tokens = Tokenizer(code)
         Parser.tokens.selectNext()
 
-        result = Parser.parseExpression()
-        if Parser.tokens.actual.type == "EOF":
-            return result
-        else:
-            raise NameError(f"Last token isn't EOF")
+        return Parser.parseBlock()
     
+    @staticmethod
+    def parseBlock():
+        stat = Statement()
+        while (Parser.tokens.actual.type != "EOF"):
+            stat.children.append(Parser.parseCommand())
+        
+        return stat
+
+    @staticmethod
+    def parseCommand():
+        result = None
+
+        if (Parser.tokens.actual.type == 'IDENTIFIER'):
+            iden = Parser.tokens.actual.value
+            Parser.tokens.selectNext()
+
+            if (Parser.tokens.actual.type == 'EQUAL'):
+                result = Assignment([iden, None])
+                Parser.tokens.selectNext()
+                result.children[1] = Parser.parseExpression()
+            else:
+                raise NameError('Expected "=", received ' + Parser.tokens.actual.type)
+        
+        elif (Parser.tokens.actual.type == 'PRINT'):
+            Parser.tokens.selectNext()
+            if (Parser.tokens.actual.type == 'OPEN_P'):
+                Parser.tokens.selectNext()
+                result = Print(Parser.parseExpression())
+
+                if (Parser.tokens.actual.type == 'CLOSE_P'):
+                    Parser.tokens.selectNext()
+                else:
+                    raise NameError("Expected to Close Parenthesis")
+            else:
+                raise NameError("Expected Parenthesis")
+        
+        if (Parser.tokens.actual.type == "LINE_END"):
+            Parser.tokens.selectNext()
+            if (not result):
+                result = NoOp()
+        
+        return result
+  
     @staticmethod
     def parseExpression():
         result = Parser.parseTerm()
@@ -57,6 +96,10 @@ class Parser:
 
         if (Parser.tokens.actual.type == 'INT'):
             result = IntVal(int(Parser.tokens.actual.value))
+            Parser.tokens.selectNext()
+
+        elif (Parser.tokens.actual.type == 'IDENTIFIER'):
+            result = Identifier(Parser.tokens.actual.value)
             Parser.tokens.selectNext()
 
         elif (Parser.tokens.actual.type == 'MINUS' or Parser.tokens.actual.type == 'PLUS'):
