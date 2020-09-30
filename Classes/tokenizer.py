@@ -36,6 +36,8 @@ class Tokenizer:
             while (self.position < len(self.origin) and (self.origin[self.position].isnumeric())):
                 resToken += self.origin[self.position]
                 self.position += 1
+                if (self.origin[self.position].isalpha() or self.origin[self.position] == "_"):
+                    raise NameError("Error creating number, found character")
             self.actual = Token(resToken, "INT")
 
         elif (self.origin[self.position].isalpha()):
@@ -51,5 +53,8 @@ class Tokenizer:
                 self.actual = Token(resToken, "PRINT")
             else:
                 self.actual = Token(resToken, "IDENTIFIER")
-
+        
+        else:
+            raise NameError("Unknown token")
+        
         return
