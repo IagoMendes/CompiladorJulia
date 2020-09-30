@@ -23,7 +23,12 @@ class Parser:
     def parseCommand():
         result = None
 
-        if (Parser.tokens.actual.type == 'IDENTIFIER'):
+        if (Parser.tokens.actual.type == "LINE_END"):
+            Parser.tokens.selectNext()
+            if (not result):
+                result = NoOp()
+
+        elif (Parser.tokens.actual.type == 'IDENTIFIER'):
             iden = Parser.tokens.actual.value
             Parser.tokens.selectNext()
 
@@ -47,10 +52,8 @@ class Parser:
             else:
                 raise NameError("Expected Parenthesis")
         
-        if (Parser.tokens.actual.type == "LINE_END"):
-            Parser.tokens.selectNext()
-            if (not result):
-                result = NoOp()
+        else:
+            raise NameError(f"Unexpected token {Parser.tokens.actual.type}")
         
         return result
   
