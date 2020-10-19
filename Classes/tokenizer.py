@@ -8,7 +8,10 @@ tokens = {
     "(": "OPEN_P",
     ")": "CLOSE_P",
     "\n": "LINE_END",
-    "=": "EQUAL"
+    "=": "EQUAL",
+    "<": "LESSER",
+    ">": "GREATER",
+    "!": "NOT"
 }
 
 class Tokenizer:
@@ -29,7 +32,31 @@ class Tokenizer:
 
         elif (self.origin[self.position] in tokens):
             self.actual = Token(self.origin[self.position], tokens[self.origin[self.position]])
-            self.position += 1        
+            self.position += 1
+            
+            if (self.position < len(self.origin)):
+                if (self.origin[self.position] == "="):
+                    self.actual = Token("==", "EQUAL_I")
+                    self.position += 1
+
+        elif (self.origin[self.position] == "&"):
+            self.position += 1
+
+            if (self.position < len(self.origin)):
+                if (self.origin[self.position] == "&"):
+                    self.actual = Token("&&", "AND")
+                    self.position += 1
+            else:
+                raise NameError("Error with character '&'")
+
+        elif (self.origin[self.position] == "|"):
+            self.position += 1
+            if (self.position < len(self.origin)):
+                if (self.origin[self.position] == "|"):
+                    self.actual = Token("||", "OR")
+                    self.position += 1
+            else:
+                raise NameError("Error with character '|'")
 
         elif (self.origin[self.position].isnumeric()):
             resToken = ""
@@ -56,5 +83,5 @@ class Tokenizer:
         
         else:
             raise NameError("Unknown token")
-        
+
         return

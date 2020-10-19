@@ -25,6 +25,17 @@ class BinOp(Node): # Two children
             return int(self.children[0].Evaluate() / self.children[1].Evaluate())
         elif self.value == '*':
             return self.children[0].Evaluate() * self.children[1].Evaluate()
+        elif self.value == '||':
+            return self.children[0].Evaluate() or self.children[1].Evaluate() 
+        elif self.value == '&&':
+            return self.children[0].Evaluate() and self.children[1].Evaluate()
+        elif self.value == '==':
+            return self.children[0].Evaluate() == self.children[1].Evaluate() 
+        elif self.value == '<':
+            return self.children[0].Evaluate() < self.children[1].Evaluate() 
+        elif self.value == '>':
+            return self.children[0].Evaluate() > self.children[1].Evaluate() 
+        
 
 class UnOp(Node):  # Single children  
     def __init__(self, value):
@@ -36,6 +47,8 @@ class UnOp(Node):  # Single children
             return self.children[0].Evaluate()
         elif self.value == '-':
             return - self.children[0].Evaluate()
+        elif self.value == '!':
+            return not(self.children[0].Evaluate())
 
 class IntVal(Node):
     def __init__(self, value):
