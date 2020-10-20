@@ -48,7 +48,7 @@ class Parser:
                         else:
                             raise NameError("Expected to Close Parenthesis")       
                 else:
-                    result.children[1] = Parser.parseExpression()
+                    result.children[1] = Parser.parseRelExpression()
             else:
                 raise NameError('Expected "=", received ' + Parser.tokens.actual.type)
         
@@ -86,28 +86,38 @@ class Parser:
 
             if (Parser.tokens.actual.type == 'LINE_END'):
                 Parser.tokens.selectNext()
+                atual = 0
                 result.children[1] = Parser.parseBlock()
 
+                if (Parser.tokens.actual.type == 'ELSEIF'):
+                    while(Parser.tokens.actual.type == "ELSEIF"):
+                        Parser.tokens.selectNext()
+                        newIf = If([Parser.parseRelExpression(), None, None])
+
+                        if (Parser.tokens.actual.type == 'LINE_END'):
+                            Parser.tokens.selectNext()
+                            newIf.children[1] = Parser.parseBlock()
+
+                        if (atual == 0):
+                            result.children[2] = newIf
+                            atual = newIf
+                        else:
+                            atual.children[2] = newIf
+                            atual = newIf               
+                
                 if (Parser.tokens.actual.type == 'ELSE'):
                     Parser.tokens.selectNext()
                     if (Parser.tokens.actual.type == 'LINE_END'):
                         Parser.tokens.selectNext()
-                        result.children[2] = Parser.parseBlock()
+                        if (atual == 0):
+                            result.children[2] = Parser.parseBlock()
+                        else:
+                            atual.children[2] = Parser.parseBlock()
 
                 if (Parser.tokens.actual.type == 'END'):
                     Parser.tokens.selectNext()
                     if (Parser.tokens.actual.type == 'LINE_END'):
                         Parser.tokens.selectNext()
-                        
-                # elif (Parser.tokens.actual.type == 'ELSEIF'):
-                #     while(Parser.tokens.actual.type == "ELSEIF"):
-                #         Parser.tokens.selectNext()
-                #         elseIfRes = If([Parser.parseRelExpression(), None, None])
-
-                #         Parser.tokens.selectNext()
-                #         if (Parser.tokens.actual.type == 'LINE_END'):
-                #             Parser.tokens.selectNext()
-                #             result.children[2] = Parser.parseBlock()
 
                 else:
                     raise NameError("Expected End, Else or Elseif")
@@ -127,7 +137,7 @@ class Parser:
                     result = BinOp(Parser.tokens.actual.value, [result, None])
                     
                     Parser.tokens.selectNext()
-                    result.children[1] = Parser.parseTerm() # Right Child
+                    result.children[1] = Parser.parseExpression() # Right Child
 
                 else:
                     raise NameError(f"Got type {Parser.tokens.actual.type} when expecting <, > or ==")
