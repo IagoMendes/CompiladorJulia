@@ -14,6 +14,16 @@ tokens = {
     "!": "NOT"
 }
 
+keywords = {
+    "println"  : "PRINT",
+    "readline" : "READ",
+    "if"       : "IF",
+    "else"     : "ELSE",
+    "elseif"   : "ELSEIF",
+    "while"    : "WHILE",
+    "end"      : "END"
+}
+
 class Tokenizer:
     def __init__(self, origin):
         self.origin = origin
@@ -21,12 +31,11 @@ class Tokenizer:
         self.actual = None
     
     def selectNext(self):
-        
         if (self.position == len(self.origin)):
             self.actual = Token('', 'EOF')
             return
         
-        elif (self.origin[self.position].isspace()):
+        elif (self.origin[self.position] == " "):
             self.position += 1
             self.selectNext()
 
@@ -76,8 +85,8 @@ class Tokenizer:
                 resToken += self.origin[self.position]
                 self.position += 1
 
-            if resToken == "println":
-                self.actual = Token(resToken, "PRINT")
+            if resToken in keywords:
+                self.actual = Token(resToken, keywords[resToken])
             else:
                 self.actual = Token(resToken, "IDENTIFIER")
         

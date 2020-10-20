@@ -93,4 +93,34 @@ class Print(Node):  # Single children
 
     def Evaluate(self):
         print(self.children[0].Evaluate())
-        
+
+class Read(Node):
+    def __init__(self):
+        self.children = None
+
+    def Evaluate(self):
+        self.value = int(input())
+        return self.value
+
+class While(Node):
+    def __init__(self, children):
+        self.children = children # 0 = RelEx & 1 = Block
+
+    def Evaluate(self):
+        while (self.children[0].Evaluate()):
+            self.children[1].Evaluate()
+
+class If(Node): 
+    def __init__(self, children):
+        self.children = children
+
+    def Evaluate(self):
+        if (self.children[2] is None):
+            if (self.children[0].Evaluate()):
+                self.children[1].Evaluate()
+        else:
+            if (self.children[0].Evaluate()):
+                self.children[1].Evaluate()
+            else:
+                self.children[2].Evaluate()
+
