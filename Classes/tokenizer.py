@@ -8,7 +8,20 @@ tokens = {
     "(": "OPEN_P",
     ")": "CLOSE_P",
     "\n": "LINE_END",
-    "=": "EQUAL"
+    "=": "EQUAL",
+    "<": "LESSER",
+    ">": "GREATER",
+    "!": "NOT"
+}
+
+keywords = {
+    "println"  : "PRINT",
+    "readline" : "READ",
+    "if"       : "IF",
+    "else"     : "ELSE",
+    "elseif"   : "ELSEIF",
+    "while"    : "WHILE",
+    "end"      : "END"
 }
 
 class Tokenizer:
@@ -18,18 +31,41 @@ class Tokenizer:
         self.actual = None
     
     def selectNext(self):
-        
         if (self.position == len(self.origin)):
             self.actual = Token('', 'EOF')
             return
         
-        elif (self.origin[self.position].isspace()):
+        elif (self.origin[self.position] == " "):
             self.position += 1
             self.selectNext()
 
         elif (self.origin[self.position] in tokens):
             self.actual = Token(self.origin[self.position], tokens[self.origin[self.position]])
-            self.position += 1        
+            self.position += 1
+            
+            if (self.position < len(self.origin)):
+                if (self.origin[self.position] == "="):
+                    self.actual = Token("==", "EQUAL_I")
+                    self.position += 1
+
+        elif (self.origin[self.position] == "&"):
+            self.position += 1
+
+            if (self.position < len(self.origin)):
+                if (self.origin[self.position] == "&"):
+                    self.actual = Token("&&", "AND")
+                    self.position += 1
+            else:
+                raise NameError("Error with character '&'")
+
+        elif (self.origin[self.position] == "|"):
+            self.position += 1
+            if (self.position < len(self.origin)):
+                if (self.origin[self.position] == "|"):
+                    self.actual = Token("||", "OR")
+                    self.position += 1
+            else:
+                raise NameError("Error with character '|'")
 
         elif (self.origin[self.position].isnumeric()):
             resToken = ""
@@ -49,12 +85,12 @@ class Tokenizer:
                 resToken += self.origin[self.position]
                 self.position += 1
 
-            if resToken == "println":
-                self.actual = Token(resToken, "PRINT")
+            if resToken in keywords:
+                self.actual = Token(resToken, keywords[resToken])
             else:
                 self.actual = Token(resToken, "IDENTIFIER")
         
         else:
             raise NameError("Unknown token")
-        
+
         return

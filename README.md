@@ -60,5 +60,29 @@ EBNF:
     DIGIT = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 ) ;
 
 
+## If, While and logical operations (!, &&, ||, ==, >, <) v2.2.1
+
+Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/master/Diagrams/diagrama5.png
+
+EBNF:
+
+    BLOCK = { COMMAND };
+    COMMAND = ( ASSIGNMENT | PRINT | IF | WHILE );
+    ASSIGNMENT = IDENTIFIER, “=”, ( RELEX | “readline()”);
+    PRINT = “println”, “(“, RELEX, “)”;
+    WHILE = “while”, RELEX, BLOCK, “end”;
+    IF = “if”, RELEX, BLOCK, { ELSE | ELSEIF }, “end”;
+    ELSEIF = “elseif”, RELEX, BLOCK, { ELSE | ELSEIF };
+    ELSE = “else”, BLOCK;
+    RELEX = EXPRESSION, { (“==” | “<” | “>”), EXPRESSION };
+    EXPRESSION = TERM, { (“+” | “-” | “||”), TERM };
+    TERM = FACTOR, { (“*” | “/” | “&&”), FACTOR };
+    FACTOR = ( ( “+” | “-” | “!”), FACTOR) | NUMBER | IDENTIFIER | “(“, RELEX, “)”;
+    IDENTIFIER = LETTER, { LETTER | DIGIT | “_” };
+    NUMBER = DIGIT, { DIGIT };
+    LETTER = ( a | … | z | A | … | Z );
+    DIGIT = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 );
+
+
 ## Version Control
 v(Major).(Minor).(Build)
