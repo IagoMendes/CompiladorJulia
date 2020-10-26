@@ -3,21 +3,29 @@ from Classes.node import IntVal, UnOp, BinOp, NoOp, Node, Assignment, Identifier
 
 class Parser:
     tokens = None
+    count = 0
 
     @staticmethod
     def run(code):
         Parser.tokens = Tokenizer(code)
         Parser.tokens.selectNext()
 
-        return Parser.parseBlock()
+        res = Parser.parseBlock()
+
+        if (Parser.tokens.actual.type == "EOF"):
+            return res
+        else:
+            raise NameError("Expected EOF, please check your syntax")
     
     @staticmethod
     def parseBlock():
         stat = Statement()
-        while (Parser.tokens.actual.type != "EOF" and Parser.tokens.actual.type != "END"
-               and Parser.tokens.actual.type != "ELSE" and Parser.tokens.actual.type != "ELSEIF"):
+
+        while (Parser.tokens.actual.type != "EOF" and Parser.tokens.actual.type != "END" and 
+               Parser.tokens.actual.type != "ELSE" and Parser.tokens.actual.type != "ELSEIF"):
+               
             stat.children.append(Parser.parseCommand())
-        
+                
         return stat
 
     @staticmethod
@@ -124,7 +132,7 @@ class Parser:
             
         else:
             raise NameError(f"Unexpected token {Parser.tokens.actual.type}")
-        
+
         return result
   
     @staticmethod
