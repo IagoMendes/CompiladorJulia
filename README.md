@@ -84,5 +84,33 @@ EBNF:
     DIGIT = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 );
 
 
+## Variable types and Strings v2.3.1
+
+Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/master/Diagrams/diagrama6.png
+
+EBNF:
+
+    BLOCK = { COMMAND };
+    COMMAND = ( LOCAL | ASSIGNMENT | PRINT | IF | WHILE );
+    LOCAL = "local", IDENTIFIER, "::", TYPE;
+    ASSIGNMENT = IDENTIFIER, “=”, ( RELEX | “readline()”);
+    PRINT = “println”, “(“, RELEX, “)”;
+    WHILE = “while”, RELEX, BLOCK, “end”;
+    IF = “if”, RELEX, BLOCK, { ELSE | ELSEIF }, “end”;
+    ELSEIF = “elseif”, RELEX, BLOCK, { ELSE | ELSEIF };
+    ELSE = “else”, BLOCK;
+    RELEX = EXPRESSION, { (“==” | “<” | “>”), EXPRESSION };
+    EXPRESSION = TERM, { (“+” | “-” | “||”), TERM };
+    TERM = FACTOR, { (“*” | “/” | “&&”), FACTOR };
+    FACTOR = ( ( “+” | “-” | “!”), FACTOR) | NUMBER | BOOL | STRING | IDENTIFIER | “(“, RELEX, “)”;
+    IDENTIFIER = LETTER, { LETTER | DIGIT | “_” };
+    NUMBER = DIGIT, { DIGIT };
+    LETTER = ( a | … | z | A | … | Z );
+    DIGIT = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 );
+    TYPE = "Int" | "Bool" | "String"; 
+    BOOL = "true" | "false";
+    STRING = '"', {.*?}, '"';
+
+
 ## Version Control
 v(Major).(Minor).(Build)

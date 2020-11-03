@@ -1,5 +1,5 @@
 from Classes.tokenizer import Tokenizer
-from Classes.node import IntVal, UnOp, BinOp, NoOp, Node, Assignment, Identifier, Statement, Print, Read, While, If
+from Classes.node import *
 
 class Parser:
     tokens = None
@@ -37,12 +37,27 @@ class Parser:
             if (not result):
                 result = NoOp()
 
+        elif (Parser.tokens.actual.type == 'LOCAL'):
+            Parser.tokens.selectNext()
+
+            if (Parser.tokens.actual.type == 'IDENTIFIER'):
+                result = Assignment([Parser.tokens.actual.value, None], None)
+                Parser.tokens.selectNext()
+
+                if (Parser.tokens.actual.type == 'COLON_I'):
+                    result.value = Parser.tokens.actual.value
+                    Parser.tokens.selectNext()
+
+                    if (Parser.tokens.actual.type == 'INT' or Parser.tokens.actual.type == 'BOOL' or Parser.tokens.actual.type == 'STRING'):
+                        result.children[1] = Parser.tokens.actual.type
+                        Parser.tokens.selectNext()
+
         elif (Parser.tokens.actual.type == 'IDENTIFIER'):
             iden = Parser.tokens.actual.value
             Parser.tokens.selectNext()
 
             if (Parser.tokens.actual.type == 'EQUAL'):
-                result = Assignment([iden, None])
+                result = Assignment([iden, None], Parser.tokens.actual.value)
                 Parser.tokens.selectNext()
 
                 if (Parser.tokens.actual.type == 'READ'):
@@ -197,8 +212,16 @@ class Parser:
             result = IntVal(int(Parser.tokens.actual.value))
             Parser.tokens.selectNext()
 
+        elif (Parser.tokens.actual.type == 'STRING'):
+            result = StringVal(Parser.tokens.actual.value)
+            Parser.tokens.selectNext()
+
         elif (Parser.tokens.actual.type == 'IDENTIFIER'):
             result = Identifier(Parser.tokens.actual.value)
+            Parser.tokens.selectNext()
+
+        elif (Parser.tokens.actual.type == 'TRUE' or Parser.tokens.actual.type == 'TRUE'):
+            result = BoolVal(Parser.tokens.actual.value)
             Parser.tokens.selectNext()
 
         elif (Parser.tokens.actual.type == 'MINUS' or Parser.tokens.actual.type == 'PLUS' or Parser.tokens.actual.type == "NOT"):
