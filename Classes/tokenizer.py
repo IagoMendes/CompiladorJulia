@@ -11,7 +11,8 @@ tokens = {
     "=": "EQUAL",
     "<": "LESSER",
     ">": "GREATER",
-    "!": "NOT"
+    "!": "NOT",
+    ":": "COLON"
 }
 
 keywords = {
@@ -21,7 +22,13 @@ keywords = {
     "else"     : "ELSE",
     "elseif"   : "ELSEIF",
     "while"    : "WHILE",
-    "end"      : "END"
+    "end"      : "END",
+    "local"    : "LOCAL",
+    "Int"      : "INT",
+    "Bool"     : "BOOL",
+    "String"   : "STRING",
+    "true"     : "TRUE",
+    "false"    : "FALSE"
 }
 
 class Tokenizer:
@@ -46,6 +53,10 @@ class Tokenizer:
             if (self.position < len(self.origin)):
                 if (self.origin[self.position] == "="):
                     self.actual = Token("==", "EQUAL_I")
+                    self.position += 1
+
+                elif (self.origin[self.position] == ":"):
+                    self.actual = Token("::", "COLON_I")
                     self.position += 1
 
         elif (self.origin[self.position] == "&"):
@@ -90,7 +101,18 @@ class Tokenizer:
             else:
                 self.actual = Token(resToken, "IDENTIFIER")
         
+        elif (self.origin[self.position] == '"'):
+            resToken = ""
+            self.position += 1
+
+            while (self.position < len(self.origin) and self.origin[self.position] != '"'):
+                resToken += self.origin[self.position]
+                self.position += 1
+
+            self.position += 1
+            self.actual = Token(resToken, "STRING")
+
         else:
             raise NameError("Unknown token")
-
+        
         return
