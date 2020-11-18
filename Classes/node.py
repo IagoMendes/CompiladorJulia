@@ -139,16 +139,18 @@ class UnOp(Node):  # Single children
     def Evaluate(self):
         if self.value == '+':
             return ['INT', self.children[0].Evaluate()[1]]
+
         elif self.value == '-':
             res = -self.children[0].Evaluate()[1]
-            #compiler.newInstruction("IMUL -1")
+            compiler.newInstruction("NEG EBX")
             return ['INT', res]
+            
         elif self.value == '!':
             if not(self.children[0].Evaluate()[1]):
-                #compiler.newInstruction("NOT EBX")
+                compiler.newInstruction("NOT EBX")
                 return ['BOOL', 1]
             else:
-                #compiler.newInstruction("NOT EBX")
+                compiler.newInstruction("NOT EBX")
                 return ['BOOL', 0]
             
 
