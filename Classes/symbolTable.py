@@ -2,6 +2,7 @@
 class SymbolTable:
     def __init__(self):
         self.table = {}
+        self.pos = 0
     
     def getter(self, value):
         if (value in self.table):
@@ -11,7 +12,8 @@ class SymbolTable:
 
     def setter(self, key, varType, value):
         if (value == None):
-            self.table[key] = [varType, None]
+            self.pos += 4
+            self.table[key] = [varType, None, self.pos]
         
         else:
             if (key in self.table):
