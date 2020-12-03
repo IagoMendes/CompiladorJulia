@@ -1,91 +1,69 @@
 from Classes.symbolTable import SymbolTable
-from Classes.compiler import Compiler
 
 table = SymbolTable()
-compiler = Compiler()
 
 class Node:
-    i = 0
-
-    def __init__(self, value, children):
+    def __init__(self, value):
         self.value = value
-        self.children = children
-        self.i = Node.newId()
+        self.children = [] # 0 = left child & 1 = right child
 
     def Evaluate(self):
         raise NotImplementedError
 
-    @staticmethod
-    def newId():
-        Node.i += 1
-        return Node.i
-
 
 class BinOp(Node): # Two children   
     def __init__(self, value, children):
-        super().__init__(value,children)
+        self.value = value
+        self.children = children # 0 = left child & 1 = right child
 
     def Evaluate(self):
-        if self.value == '+':
-            res0 = self.children[0].Evaluate()
-            compiler.newInstruction("PUSH EBX")
-            res1 = self.children[1].Evaluate()
-            compiler.newInstruction("POP EAX")
-            compiler.newInstruction("ADD EAX, EBX")
-            compiler.newInstruction("MOV EBX, EAX")
+        res0 = self.children[0].Evaluate()
+        res1 = self.children[1].Evaluate()
 
+        if self.value == '+':
+            if (res0[0] == res1[0]):
+                return [res0[0], res0[1] + res1[1]]
+            elif (res0[0] == "STRING" or res1[0] == "STRING"):
+                raise NameError (f'Unable perform {res0[0]} + {res1[0]}')
             return ['INT', res0[1] + res1[1]]
 
         elif self.value == '-':
-            res0 = self.children[0].Evaluate()
-            compiler.newInstruction("PUSH EBX")
-            res1 = self.children[1].Evaluate()
-            compiler.newInstruction("POP EAX")
-            compiler.newInstruction("SUB EAX, EBX")
-            compiler.newInstruction("MOV EBX, EAX")
-
+            if (res0[0] == "STRING" or res1[0] == "STRING"):
+                raise NameError (f'Unable perform {res0[0]} - {res1[0]}')
             return ['INT', res0[1] - res1[1]]
 
         elif self.value == '/':
-            res0 = self.children[0].Evaluate()
-            compiler.newInstruction("PUSH EBX")
-            res1 = self.children[1].Evaluate()
-            compiler.newInstruction("POP EAX")
-            compiler.newInstruction("DIV EAX, EBX")
-            compiler.newInstruction("MOV EBX, EAX")
-
-            return ['INT', res0[1] / res1[1]]
+            if (res0[0] == "STRING" or res1[0] == "STRING"):
+                raise NameError (f'Unable perform {res0[0]} / {res1[0]}')
+            return ['INT', int(res0[1] / res1[1])]
 
         elif self.value == '*':
-            res0 = self.children[0].Evaluate()
-            compiler.newInstruction("PUSH EBX")
-            res1 = self.children[1].Evaluate()
-            compiler.newInstruction("POP EAX")
-            compiler.newInstruction("IMUL EBX")
-            compiler.newInstruction("MOV EBX, EAX")
+            if (res0[0] == "STRING" or res1[0] == "STRING"):
+                if (res0[0] == "BOOL"):
+                    if (res0[1] == 1):
+                        res0[1] = "true"
+                    else:
+                        res0[1] = "false"
 
-            return ['INT', res0[1] * res1[1]]
+                if (res1[0] == "BOOL"):
+                    if (res1[1] == 1):
+                        res1[1] = "true"
+                    else:
+                        res1[1] = "false"
+                
+                return ["STRING", str(res0[1]) + str(res1[1])]
+            else:
+                return ['INT', res0[1] * res1[1]]
 
         elif self.value == '||':
-            res0 = self.children[0].Evaluate()
-            compiler.newInstruction("PUSH EBX")
-            res1 = self.children[1].Evaluate()
-            compiler.newInstruction("POP EAX")
-            compiler.newInstruction("OR EAX, EBX")
-            compiler.newInstruction("MOV EBX, EAX")
-
             if (res0[1] or res1[1]):
                 return ['BOOL', 1]
             else:
                 return ['BOOL', 0]
 
         elif self.value == '&&':
-            res0 = self.children[0].Evaluate()
-            compiler.newInstruction("PUSH EBX")
-            res1 = self.children[1].Evaluate()
-            compiler.newInstruction("POP EAX")
-            compiler.newInstruction("AND EAX, EBX")
-            compiler.newInstruction("MOV EBX, EAX")
+            if (res0[0] == "STRING" or res1[0] == "STRING"):
+                raise NameError (f'Unable perform {res0[0]} && {res1[0]}')
 
             if (res0[1] and res1[1]):
                 return ['BOOL', 1]
@@ -93,39 +71,18 @@ class BinOp(Node): # Two children
                 return ['BOOL', 0]
 
         elif self.value == '==':
-            res0 = self.children[0].Evaluate()
-            compiler.newInstruction("PUSH EBX")
-            res1 = self.children[1].Evaluate()
-            compiler.newInstruction("POP EAX")
-            compiler.newInstruction("CMP EAX, EBX")
-            compiler.newInstruction("CALL binop_je")
-
             if (res0[1] == res1[1]):
                 return ['BOOL', 1]
             else:
                 return ['BOOL', 0]
 
         elif self.value == '<':
-            res0 = self.children[0].Evaluate()
-            compiler.newInstruction("PUSH EBX")
-            res1 = self.children[1].Evaluate()
-            compiler.newInstruction("POP EAX")
-            compiler.newInstruction("CMP EAX, EBX")
-            compiler.newInstruction("CALL binop_jl")
-
-            if (res0[1] > res1[1]):
+            if (res0[1] < res1[1]):
                 return ['BOOL', 1]
             else:
                 return ['BOOL', 0]
 
         elif self.value == '>':
-            res0 = self.children[0].Evaluate()
-            compiler.newInstruction("PUSH EBX")
-            res1 = self.children[1].Evaluate()
-            compiler.newInstruction("POP EAX")
-            compiler.newInstruction("CMP EAX, EBX")
-            compiler.newInstruction("CALL binop_jg")
-
             if (res0[1] > res1[1]):
                 return ['BOOL', 1]
             else:
@@ -134,81 +91,79 @@ class BinOp(Node): # Two children
 
 class UnOp(Node):  # Single children  
     def __init__(self, value):
-        super().__init__(value,[None])
+        self.value = value
+        self.children = [None] # 0 = child
 
     def Evaluate(self):
         if self.value == '+':
             return ['INT', self.children[0].Evaluate()[1]]
-
         elif self.value == '-':
-            res = -self.children[0].Evaluate()[1]
-            compiler.newInstruction("NEG EBX")
-            return ['INT', res]
-            
+            return ['INT', -self.children[0].Evaluate()[1]]
         elif self.value == '!':
             if not(self.children[0].Evaluate()[1]):
-                compiler.newInstruction("NOT EBX")
                 return ['BOOL', 1]
             else:
-                compiler.newInstruction("NOT EBX")
                 return ['BOOL', 0]
             
 
 class IntVal(Node):
     def __init__(self, value):
-        super().__init__(value,None)
+        self.value = value
+        self.children = None
     
     def Evaluate(self):
-        compiler.newInstruction(f"MOV EBX, {self.value}")
         return ["INT", self.value]
 
 
 class BoolVal(Node):
     def __init__(self, value):
-        super().__init__(value, None)
+        self.value = value
+        self.children = None
     
     def Evaluate(self):
         if (self.value == "true"):
-            compiler.newInstruction("CALL binop_true")
-            return ["BOOL", True]
-
+            return ["BOOL", 1]
         if (self.value == "false"):
-            compiler.newInstruction("CALL binop_false")
-            return ["BOOL", False]
+            return ["BOOL", 0]
+
+
+class StringVal(Node):
+    def __init__(self, value):
+        self.value = value
+        self.children = None
+    
+    def Evaluate(self):
+        return ["STRING", self.value]
 
 
 class NoOp(Node):
     def __init__(self):
-        super().__init__(None, None)
+        self.children = None
     
     def Evaluate(self):
-        compiler.newInstruction("NOP")
         pass
 
 
 class Identifier(Node):
     def __init__(self, value):
-        super().__init__(value, None)
+        self.value = value
     
     def Evaluate(self):
-        res = table.getter(self.value)
-        compiler.newInstruction(f"MOV EBX, [EBP - {res[2]}]")
-        return res
+        return table.getter(self.value)
 
 
 class Assignment(Node): # Two children   
     def __init__(self, children, value):
-        super().__init__(value,children)
+        self.children = children # 0 = Identifier & 1 = Expression/Type
+        self.value = value
 
     def Evaluate(self):
         if (self.value == "::"):
-            compiler.newInstruction("PUSH DWORD 0")
             table.setter(self.children[0], self.children[1], None)
 
         elif (self.value == "="):
             res = self.children[1].Evaluate()
             if (res[0] == table.getter(self.children[0])[0]):
-                compiler.newInstruction(f"MOV [EBP-{table.getter(self.children[0])[2]}], EBX")
                 table.setter(self.children[0], res[0], res[1])
             else:
                 raise NameError(f"Types for variable {self.children[0]} don't match")
@@ -216,7 +171,7 @@ class Assignment(Node): # Two children
 
 class Statement(Node):  
     def __init__(self):
-        super().__init__(None, [])
+        self.children = [] 
 
     def Evaluate(self):
         for i in range(len(self.children)):
@@ -225,32 +180,40 @@ class Statement(Node):
 
 class Print(Node):  # Single children  
     def __init__(self, children):
-        super().__init__(None, [children])
+        self.children = [children] # 0 = child
 
     def Evaluate(self):
-        self.children[0].Evaluate()
-        compiler.newInstruction("PUSH EBX")
-        compiler.newInstruction("CALL print")
-        compiler.newInstruction("POP EBX")
+        res = self.children[0].Evaluate()
+        if (res[0] == "BOOL"):
+            if (res[1] == 1):
+                print(True)
+            elif (res[1] == 0):
+                print(False)
+        else:
+            print(self.children[0].Evaluate()[1])
+
+
+class Read(Node):
+    def __init__(self):
+        self.children = None
+
+    def Evaluate(self):
+        self.value = int(input())
+        return ['INT', self.value]
 
 
 class While(Node):
     def __init__(self, children):
-        super().__init__(None, children)
+        self.children = children # 0 = RelEx & 1 = Block
 
     def Evaluate(self):
-        compiler.newInstruction(f"loop_{self.i}: ;")
-        self.children[0].Evaluate()
-        compiler.newInstruction(f"CMP EBX, False ;")
-        compiler.newInstruction(f"JE exit_{self.i} ;")
-        self.children[1].Evaluate()
-        compiler.newInstruction(f"JMP loop_{self.i} ;")
-        compiler.newInstruction(f"exit_{self.i}: ;")
+        while (self.children[0].Evaluate()[1]):
+            self.children[1].Evaluate()
 
 
 class If(Node): 
     def __init__(self, children):
-        super().__init__(None, children)
+        self.children = children
 
     def Evaluate(self):
         if (self.children[0].Evaluate()[0] != 'STRING'):
