@@ -253,15 +253,14 @@ class If(Node):
         super().__init__(None, children)
 
     def Evaluate(self):
-        self.children[0].Evaluate()
-        compiler.newInstruction(f"CMP EBX, False")
-        compiler.newInstruction(f"JE exit_{self.i}")
-        self.children[1].Evaluate()
-        compiler.newInstruction(f"exit_{self.i}: ;")
-        
-        if not (self.children[2] is None):
-            self.children[0].Evaluate()
-            compiler.newInstruction(f"CMP EBX, False")
-            compiler.newInstruction(f"JNE exit_else_{self.i}")
-            self.children[2].Evaluate()
-            compiler.newInstruction(f"exit_else_{self.i}: ;")
+        if (self.children[0].Evaluate()[0] != 'STRING'):
+            if (self.children[2] is None):
+                if (self.children[0].Evaluate()[1]):
+                    self.children[1].Evaluate()
+            else:
+                if (self.children[0].Evaluate()[1]):
+                    self.children[1].Evaluate()
+                else:
+                    self.children[2].Evaluate()
+        else:
+            raise NameError("Cannot use string as single argument.")
