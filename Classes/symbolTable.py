@@ -19,3 +19,4 @@ class SymbolTable:
                     self.table[key][1] = value
             else:
                 raise NameError(f"Expected definition for variable {key}")
+            

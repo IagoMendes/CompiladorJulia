@@ -227,4 +227,3 @@ class If(Node):
                     self.children[2].Evaluate()
         else:
             raise NameError("Cannot use string as single argument.")
-
