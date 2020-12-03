@@ -1,7 +1,6 @@
 import sys
 from Classes.parser import Parser
 from Classes.pre import PreOps
-from Classes.node import compiler
 
 def main():
 
@@ -19,8 +18,6 @@ def main():
 
         # Evaluating the result
         result.Evaluate()
-
-        compiler.writeFile()
 
         #else:
         #    raise NameError(f"Expected Julia extension")
