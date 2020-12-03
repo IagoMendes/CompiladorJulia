@@ -220,7 +220,7 @@ class Parser:
             result = Identifier(Parser.tokens.actual.value)
             Parser.tokens.selectNext()
 
-        elif (Parser.tokens.actual.type == 'TRUE' or Parser.tokens.actual.type == 'TRUE'):
+        elif (Parser.tokens.actual.type == 'TRUE' or Parser.tokens.actual.type == 'FALSE'):
             result = BoolVal(Parser.tokens.actual.value)
             Parser.tokens.selectNext()
 

@@ -216,12 +216,15 @@ class If(Node):
         self.children = children
 
     def Evaluate(self):
-        if (self.children[2] is None):
-            if (self.children[0].Evaluate()[1]):
-                self.children[1].Evaluate()
-        else:
-            if (self.children[0].Evaluate()[1]):
-                self.children[1].Evaluate()
+        if (self.children[0].Evaluate()[0] != 'STRING'):
+            if (self.children[2] is None):
+                if (self.children[0].Evaluate()[1]):
+                    self.children[1].Evaluate()
             else:
-                self.children[2].Evaluate()
+                if (self.children[0].Evaluate()[1]):
+                    self.children[1].Evaluate()
+                else:
+                    self.children[2].Evaluate()
+        else:
+            raise NameError("Cannot use string as single argument.")
 
