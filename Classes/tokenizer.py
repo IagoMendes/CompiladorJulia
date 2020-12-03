@@ -17,7 +17,6 @@ tokens = {
 
 keywords = {
     "println"  : "PRINT",
-    "readline" : "READ",
     "if"       : "IF",
     "else"     : "ELSE",
     "elseif"   : "ELSEIF",
@@ -26,7 +25,6 @@ keywords = {
     "local"    : "LOCAL",
     "Int"      : "INT",
     "Bool"     : "BOOL",
-    "String"   : "STRING",
     "true"     : "TRUE",
     "false"    : "FALSE"
 }
@@ -100,17 +98,6 @@ class Tokenizer:
                 self.actual = Token(resToken, keywords[resToken])
             else:
                 self.actual = Token(resToken, "IDENTIFIER")
-        
-        elif (self.origin[self.position] == '"'):
-            resToken = ""
-            self.position += 1
-
-            while (self.position < len(self.origin) and self.origin[self.position] != '"'):
-                resToken += self.origin[self.position]
-                self.position += 1
-
-            self.position += 1
-            self.actual = Token(resToken, "STRING")
 
         else:
             raise NameError("Unknown token")

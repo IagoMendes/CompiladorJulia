@@ -48,7 +48,7 @@ class Parser:
                     result.value = Parser.tokens.actual.value
                     Parser.tokens.selectNext()
 
-                    if (Parser.tokens.actual.type == 'INT' or Parser.tokens.actual.type == 'BOOL' or Parser.tokens.actual.type == 'STRING'):
+                    if (Parser.tokens.actual.type == 'INT' or Parser.tokens.actual.type == 'BOOL'):
                         result.children[1] = Parser.tokens.actual.type
                         Parser.tokens.selectNext()
 
@@ -60,18 +60,7 @@ class Parser:
                 result = Assignment([iden, None], Parser.tokens.actual.value)
                 Parser.tokens.selectNext()
 
-                if (Parser.tokens.actual.type == 'READ'):
-                    Parser.tokens.selectNext()
-                    if (Parser.tokens.actual.type == 'OPEN_P'):
-                        Parser.tokens.selectNext()
-                        result.children[1] = Read()
-
-                        if (Parser.tokens.actual.type == 'CLOSE_P'):
-                            Parser.tokens.selectNext()
-                        else:
-                            raise NameError("Expected to Close Parenthesis")       
-                else:
-                    result.children[1] = Parser.parseRelExpression()
+                result.children[1] = Parser.parseRelExpression()
             else:
                 raise NameError('Expected "=", received ' + Parser.tokens.actual.type)
         
@@ -210,10 +199,6 @@ class Parser:
 
         if (Parser.tokens.actual.type == 'INT'):
             result = IntVal(int(Parser.tokens.actual.value))
-            Parser.tokens.selectNext()
-
-        elif (Parser.tokens.actual.type == 'STRING'):
-            result = StringVal(Parser.tokens.actual.value)
             Parser.tokens.selectNext()
 
         elif (Parser.tokens.actual.type == 'IDENTIFIER'):
