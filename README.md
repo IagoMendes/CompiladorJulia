@@ -110,6 +110,40 @@ EBNF:
     TYPE = "Int" | "Bool" | "String"; 
     BOOL = "true" | "false";
     STRING = '"', {.*?}, '"';
+    
+
+## Functions v2.4.0
+
+Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/master/Diagrams/diagrama7.png
+
+EBNF:
+
+    BLOCK = { COMMAND | BLOCKF };
+    COMMAND = ( LOCAL | ASSIGNMENT | PRINT | IF | WHILE | FUNCTIONCALL | ( "return", RELEX ) );
+    BLOCKF = "function", IDENTIFIER, "(", (IDENTIFIER, "::", TYPE), {",", IDENTIFIER, "::", TYPE}, ")", "::", TYPE, "\n", { COMMAND }, "end";
+    FUNCTIONCALL = IDENTIFIER, "(", ( RELEX ), {",", RELEX}, ")";
+    LOCAL = "local", IDENTIFIER, "::", TYPE;
+    ASSIGNMENT = IDENTIFIER, “=”, ( RELEX | “readline()”);
+    PRINT = “println”, “(“, RELEX, “)”;
+    WHILE = “while”, RELEX, BLOCK, “end”;
+    IF = “if”, RELEX, BLOCK, { ELSE | ELSEIF }, “end”;
+    ELSEIF = “elseif”, RELEX, BLOCK, { ELSE | ELSEIF };
+    ELSE = “else”, BLOCK;
+    RELEX = EXPRESSION, { (“==” | “<” | “>”), EXPRESSION };
+    EXPRESSION = TERM, { (“+” | “-” | “||”), TERM };
+    TERM = FACTOR, { (“*” | “/” | “&&”), FACTOR };
+    FACTOR = ( ( “+” | “-” | “!”), FACTOR) | NUMBER | BOOL | STRING | IDENTIFIER | “(“, RELEX, “)” | FUNCTIONCALL;
+    IDENTIFIER = LETTER, { LETTER | DIGIT | “_” };
+    NUMBER = DIGIT, { DIGIT };
+    LETTER = ( a | … | z | A | … | Z );
+    DIGIT = ( 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0 );
+    TYPE = "Int" | "Bool" | "String"; 
+    BOOL = "true" | "false";
+    STRING = '"', {.*?}, '"';
+
+## Assembly v3.0.0
+
+Simpler compiler (without functions, strings and "readline"), but generates .asm file for julia code.
 
 
 ## Version Control
