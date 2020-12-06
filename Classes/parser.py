@@ -31,6 +31,8 @@ class Parser:
         stat = Statement()
 
         while (Parser.tokens.actual.type != "EOF"):
+
+            # Declaring Function
             if (Parser.tokens.actual.type == "FUNCTION"):
                 Parser.tokens.selectNext()
                 if (Parser.tokens.actual.type == "IDENTIFIER"):
@@ -39,6 +41,8 @@ class Parser:
                     Parser.tokens.selectNext()
                     if (Parser.tokens.actual.type == "OPEN_P"):
                         Parser.tokens.selectNext()
+
+                        # Arguments
                         if (Parser.tokens.actual.type == "IDENTIFIER"):
                             arguments = [Parser.tokens.actual.value]
                             Parser.tokens.selectNext()
@@ -69,6 +73,8 @@ class Parser:
                                     raise NameError("Missing type for function argument")
                             else:
                                 raise NameError("Use '::' to declare type")
+
+                        # End arguments, looks for function type
                         if (Parser.tokens.actual.type == "CLOSE_P"):
                             Parser.tokens.selectNext()
                             if (Parser.tokens.actual.type == "COLON_I"):
@@ -78,6 +84,8 @@ class Parser:
                                     Parser.tokens.selectNext()
                                     if (Parser.tokens.actual.type == "LINE_END"):
                                         Parser.tokens.selectNext()
+                                        
+                                        # Function block
                                         func.children.append(Parser.parseBlock())
                                         if (Parser.tokens.actual.type == "END"):
                                             Parser.tokens.selectNext()
