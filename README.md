@@ -118,7 +118,8 @@ Syntactic diagram: https://github.com/IagoMendes/CompiladorJulia/blob/master/Dia
 
 EBNF:
 
-    BLOCK = { COMMAND | BLOCKF };
+    MAIN = { BLOCKF | COMMAND };
+    BLOCK = { COMMAND };
     COMMAND = ( LOCAL | ASSIGNMENT | PRINT | IF | WHILE | FUNCTIONCALL | ( "return", RELEX ) );
     BLOCKF = "function", IDENTIFIER, "(", (IDENTIFIER, "::", TYPE), {",", IDENTIFIER, "::", TYPE}, ")", "::", TYPE, "\n", { COMMAND }, "end";
     FUNCTIONCALL = IDENTIFIER, "(", ( RELEX ), {",", RELEX}, ")";
