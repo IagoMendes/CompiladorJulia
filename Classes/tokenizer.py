@@ -12,7 +12,8 @@ tokens = {
     "<": "LESSER",
     ">": "GREATER",
     "!": "NOT",
-    ":": "COLON"
+    ":": "COLON",
+    ",": "COMMA"
 }
 
 keywords = {
@@ -28,7 +29,9 @@ keywords = {
     "Bool"     : "BOOL",
     "String"   : "STRING",
     "true"     : "TRUE",
-    "false"    : "FALSE"
+    "false"    : "FALSE",
+    "function" : "FUNCTION",
+    "return"   : "RETURN"
 }
 
 class Tokenizer:
@@ -51,11 +54,11 @@ class Tokenizer:
             self.position += 1
             
             if (self.position < len(self.origin)):
-                if (self.origin[self.position] == "="):
+                if (self.origin[self.position] == "=" and self.origin[self.position-1] == "="):
                     self.actual = Token("==", "EQUAL_I")
                     self.position += 1
 
-                elif (self.origin[self.position] == ":"):
+                elif (self.origin[self.position] == ":" and self.origin[self.position-1] == ":"):
                     self.actual = Token("::", "COLON_I")
                     self.position += 1
 

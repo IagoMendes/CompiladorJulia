@@ -1,6 +1,7 @@
 import sys
 from Classes.parser import Parser
 from Classes.pre import PreOps
+from Classes.symbolTable import *
 
 def main():
 
@@ -17,14 +18,14 @@ def main():
         result = Parser.run(newString)
 
         # Evaluating the result
-        result.Evaluate()
+        table = SymbolTable()
+        result.Evaluate(table)
 
         #else:
         #    raise NameError(f"Expected Julia extension")
         
     else: 
         return
- 
     return
 
 if __name__ == "__main__":
