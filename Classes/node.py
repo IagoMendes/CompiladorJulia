@@ -176,7 +176,10 @@ class Statement(Node):
 
     def Evaluate(self, table):
         for i in range(len(self.children)):
-            self.children[i].Evaluate(table)
+            if (table.returnGetter()[1] == None):
+                self.children[i].Evaluate(table)
+            else:
+                break
 
 
 class Print(Node):  # Single children  
@@ -261,7 +264,7 @@ class FunctionCall(Node):
             localTable = SymbolTable()
             for i in range(len(res[1].children)-1):
                 arg = self.children[i].Evaluate(table)
-
+                
                 if (res[1].children[i][1] == arg[0]):
                     localTable.setter(res[1].children[i][0], res[1].children[i][1], None)
                     localTable.setter(res[1].children[i][0], res[1].children[i][1], arg[1])

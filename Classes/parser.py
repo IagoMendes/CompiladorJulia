@@ -55,12 +55,12 @@ class Parser:
                                     while (Parser.tokens.actual.type == "COMMA"):
                                         Parser.tokens.selectNext()
                                         if (Parser.tokens.actual.type == "IDENTIFIER"):
-                                            arguments = [Parser.tokens.actual.value]
+                                            arguments = [Parser.tokens.actual.value] 
                                             Parser.tokens.selectNext()
                                             if (Parser.tokens.actual.type == "COLON_I"):
                                                 Parser.tokens.selectNext()
                                                 if (Parser.tokens.actual.type == 'INT' or Parser.tokens.actual.type == 'BOOL' or Parser.tokens.actual.type == 'STRING'):
-                                                    arguments.append(Parser.tokens.actual.value)
+                                                    arguments.append(Parser.tokens.actual.type) 
                                                     func.children.append(arguments)
                                                     Parser.tokens.selectNext()
                                                 else:

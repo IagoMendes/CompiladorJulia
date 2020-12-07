@@ -36,6 +36,6 @@ class SymbolTable:
     def returnGetter(self):
         return self.table["RETURN"]
 
-    def returnSetter(self, value, retType):
-        self.table["RETURN"] = [value, retType]   
+    def returnSetter(self, retType, value):
+        self.table["RETURN"] = [retType, value]   
 
