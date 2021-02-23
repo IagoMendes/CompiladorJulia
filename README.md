@@ -1,4 +1,7 @@
-# Compilador Julia
+# Julia Compiler
+
+Simplified compiler for Julia Language incremented from a basic calculator. Undergraduate Program in Computer Engineering at Insper (7th semester).
+
 
 ## Basic number calculator (+ and -) v1.0.1
 
